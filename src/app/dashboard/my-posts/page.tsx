@@ -79,6 +79,7 @@ const PostPage: React.FC = () => {
                 title={post.title}
                 description={post.description}
                 showEditDeleteButtons={true}
+                onEditClick={() => router.push(`/dashboard/edit-post/${post.id}`)}
               />
             </Box>
           ))}
