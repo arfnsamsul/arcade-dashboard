@@ -6,6 +6,7 @@ import PostCard from '@/components/post-card/PostCard';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from '@/firebaseConfig';
 import { Post } from '@/types/Post'; // Import the Post interface
+import { useRouter } from 'next/navigation';
 
 const PostPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]); // Ensure the posts array is typed
@@ -24,6 +25,8 @@ const PostPage: React.FC = () => {
     fetchPosts();
   }, []);
 
+  const router = useRouter();
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>
@@ -39,6 +42,9 @@ const PostPage: React.FC = () => {
       <Button 
         sx={{ m: 2 }}
         variant='contained'
+        onClick={()=> {
+          router.push("/dashboard/new-post");
+        }}
       > New Post </Button>
 
       <Box
