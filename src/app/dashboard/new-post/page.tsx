@@ -75,10 +75,20 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setPost((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    // Automatically set avatarAlt to match the title
+    if (name === "title") {
+      setPost((prev) => ({
+        ...prev,
+        [name]: value,
+        avatarAlt: value, // Set avatarAlt to the same value as the title
+      }));
+    } else {
+      setPost((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async () => {
@@ -177,15 +187,6 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
             </IconButton>
           </Box>
         </Box>
-        <TextField
-          fullWidth
-          label="Avatar Alt"
-          variant="outlined"
-          name="avatarAlt"
-          value={post.avatarAlt}
-          onChange={handleChange}
-          sx={{ mb: 3 }}
-        />
         <TextField
           fullWidth
           label="Name"
