@@ -135,7 +135,7 @@ const PostPage: React.FC = () => {
   return (
     <div>
       <Typography variant="h4" gutterBottom>
-        Dashboard
+        Post
       </Typography>
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
@@ -176,6 +176,7 @@ const PostPage: React.FC = () => {
               title={post.title}
               description={post.description}
               showActions={true}
+              showEditDeleteButtons={true}
             />
           </Box>
         ))}
