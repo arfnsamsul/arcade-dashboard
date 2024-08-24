@@ -1,4 +1,4 @@
-import { collection, addDoc, getDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { Post } from "@/types/Post"; // Ensure this points to your Post type
 
@@ -40,5 +40,15 @@ export const updatePost = async (postId: string, postData: Omit<Post, "id">) => 
     console.log("Post updated successfully!");
   } catch (error) {
     console.error("Error updating post: ", error);
+  }
+};
+
+export const deletePost = async (postId: string) => {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    await deleteDoc(postDocRef);
+    console.log("Post deleted successfully");
+  } catch (error) {
+    console.error("Error deleting post:", error);
   }
 };

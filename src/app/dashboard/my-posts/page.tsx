@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Box, Breadcrumbs, Button, Link, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Link, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import PostCard from '@/components/post-card/PostCard';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from '@/firebaseConfig';
 import { Post } from '@/types/Post'; // Import the Post interface
 import { useRouter } from 'next/navigation';
+import { deletePost } from '@/services/postService'; // Import the delete service function
 
 const PostPage: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]); // Ensure the posts array is typed
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [openDialog, setOpenDialog] = useState(false); // State to control the confirmation dialog
+  const [postIdToDelete, setPostIdToDelete] = useState<string | null>(null); // Store the post ID to delete
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,7 +29,25 @@ const PostPage: React.FC = () => {
     fetchPosts();
   }, []);
 
-  const router = useRouter();
+  const handleDeletePost = async () => {
+    if (postIdToDelete) {
+      await deletePost(postIdToDelete); // Call the delete function
+      // Remove the deleted post from the state
+      setPosts((prevPosts) => prevPosts.filter(post => post.id !== postIdToDelete));
+      setPostIdToDelete(null); // Reset the state
+      setOpenDialog(false); // Close the confirmation dialog
+    }
+  };
+
+  const handleOpenDeleteDialog = (postId: string) => {
+    setPostIdToDelete(postId);
+    setOpenDialog(true); // Open the confirmation dialog
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setPostIdToDelete(null); // Reset the state
+  };
 
   return (
     <div>
@@ -42,10 +64,12 @@ const PostPage: React.FC = () => {
       <Button 
         sx={{ m: 2 }}
         variant='contained'
-        onClick={()=> {
+        onClick={() => {
           router.push("/dashboard/new-post");
         }}
-      > New Post </Button>
+      >
+        New Post
+      </Button>
 
       <Box
         sx={{
@@ -80,11 +104,35 @@ const PostPage: React.FC = () => {
                 description={post.description}
                 showEditDeleteButtons={true}
                 onEditClick={() => router.push(`/dashboard/edit-post/${post.id}`)}
+                onDeleteClick={() => handleOpenDeleteDialog(post.id)} // Open the confirmation dialog before deleting
               />
             </Box>
           ))}
         </Box>
       </Box>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Deletion"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this post? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeletePost} color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

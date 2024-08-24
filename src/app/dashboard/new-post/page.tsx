@@ -14,7 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
 
 import { createPost, getPostById, updatePost } from "@/services/postService";
-import { Post } from "@/types/post";
+import { Post } from "@/types/Post";
 
 interface NewPostPageProps {
   isEditMode?: boolean;
