@@ -17,8 +17,10 @@ import { createPost, getPostById, updatePost } from "@/services/postService";
 import { Post } from "@/types/Post";
 
 export default function NewPostPage() {
-  const { id } = useParams(); // Get the postId from the URL
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id; // Ensure postId is a single string
   const isEditMode = Boolean(id); // If there is an id, it's edit mode
+  
   const router = useRouter();
 
   const [post, setPost] = useState<Omit<Post, "id">>({

@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -26,7 +26,12 @@ const menuItems = [
   { text: 'My Profile', icon: <Person />, path: '/dashboard/profile' },
 ];
 
-const DashboardLayout: React.FC = ({ children }) => {
+// Define the type for the component props
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
