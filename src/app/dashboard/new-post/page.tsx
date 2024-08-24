@@ -11,20 +11,16 @@ import {
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation"; // Import useParams and useRouter
 
 import { createPost, getPostById, updatePost } from "@/services/postService";
 import { Post } from "@/types/Post";
 
-interface NewPostPageProps {
-  isEditMode?: boolean;
-  postId?: string;
-}
+export default function NewPostPage() {
+  const { id } = useParams(); // Get the postId from the URL
+  const isEditMode = Boolean(id); // If there is an id, it's edit mode
+  const router = useRouter();
 
-const NewPostPage: React.FC<NewPostPageProps> = ({
-  isEditMode = false,
-  postId,
-}) => {
   const [post, setPost] = useState<Omit<Post, "id">>({
     avatarSrc: "",
     avatarAlt: "",
@@ -36,12 +32,10 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
     description: "",
   });
 
-  const router = useRouter();
-
   useEffect(() => {
-    if (isEditMode && postId) {
+    if (isEditMode && id) {
       const fetchPost = async () => {
-        const fetchedPost = await getPostById(postId);
+        const fetchedPost = await getPostById(id);
         if (fetchedPost) {
           setPost({
             avatarSrc: fetchedPost.avatarSrc,
@@ -57,7 +51,7 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
       };
       fetchPost();
     }
-  }, [isEditMode, postId]);
+  }, [isEditMode, id]);
 
   const handleImageUpload = () => {
     setPost((prev) => ({
@@ -92,8 +86,8 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (isEditMode && postId) {
-      await updatePost(postId, post);
+    if (isEditMode && id) {
+      await updatePost(id, post);
     } else {
       await createPost(post);
     }
@@ -242,6 +236,4 @@ const NewPostPage: React.FC<NewPostPageProps> = ({
       </Card>
     </Box>
   );
-};
-
-export default NewPostPage;
+}

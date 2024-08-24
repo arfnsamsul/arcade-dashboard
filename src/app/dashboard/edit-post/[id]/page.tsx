@@ -9,10 +9,7 @@ const EditPostPage: React.FC = () => {
   const postId = Array.isArray(params.id) ? params.id[0] : params.id; // Ensure postId is a single string
 
   return (
-    <NewPostPage
-      isEditMode={true} // Pass this prop to indicate edit mode
-      postId={postId} // Pass the postId prop
-    />
+    <NewPostPage />
   );
 };
 
